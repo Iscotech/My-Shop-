@@ -7,19 +7,14 @@ import { products } from "@/data";
 import Link from "next/link";
 import { title } from "process";
 import React, { useState } from "react";
-import {
-  MdKeyboardDoubleArrowRight,
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { Navigation, Pagination } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 
 const HotProducts = () => {
   const buttons = [
@@ -52,11 +47,26 @@ const HotProducts = () => {
   ];
   const [active, setActive] = useState("all");
   const [price, setPrice] = useState("10");
+  const [open, setOpen] = useState(false);
+  const handleClickChange = () => {
+    setOpen(!open);
+  };
   return (
     <section className="py-5">
       <Container>
         <div className="flex justify-between">
-          <h2 className="mb-2 capitalize text-3xl"> our hot products</h2>
+          <h2 className=" hidden md:block mb-2 capitalize text-3xl">
+            our hot products
+          </h2>
+          <div className="md:hidden">
+            <Button
+              type="accent"
+              size="small"
+              handleClickChange={handleClickChange}
+            >
+              filter
+            </Button>
+          </div>
           <Link href="/products">
             <span className="underline text-accent-500 flex font-bold items-center">
               All Products
@@ -64,8 +74,12 @@ const HotProducts = () => {
             </span>
           </Link>
         </div>
-        <div className="flex gap-5 mt-5">
-          <div className="flex-1 py-7 px-5 bg-white shadow">
+        <div className=" relative flex gap-5 mt-5 ">
+          <div
+            className={`absolute md:static top-0 z-10 flex-1 py-7 px-5 bg-white shadow transition-all duration-300 ${
+              open ? "left-0" : "left-[-100%]"
+            }`}
+          >
             <h2 className="text-2xl font-bold opacity-80"> Categories</h2>
             <ul>
               {buttons.map((button) => (
@@ -110,33 +124,39 @@ const HotProducts = () => {
               Clear Filter
             </Button>
           </div>
-          <div className="flex-[5]">
-            <div>
-              <Swiper
-                modules={[Navigation, Pagination, Scrollbar, A11y]}
-                spaceBetween={50}
-                slidesPerView={3}
-                navigation
-                pagination={{ clickable: true }}
-                scrollbar={{ draggable: true }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log("slide change")}
-              >
-                {products.map((item) => (
-                  <SwiperSlide key={item.id}>
-                    <Product item={item} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+          <div className="w-full md:w-[80%]">
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={20}
+              slidesPerView={1}
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
+              pagination={{
+                el: ".swiper-pagination",
+                type: "bullets",
+              }}
+              breakpoints={{
+                768: {
+                  slidesPerView: 3,
+                },
+                1200: {
+                  slidesPerView: 3,
+                },
+              }}
+            >
+              {products.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <Product item={item} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className="button-swiper">
+              <div className="swiper-button-prev"></div>
+              <div className="swiper-pagination"></div>
+              <div className="swiper-button-next"></div>
             </div>
-            {/* <div className="flex justify-center gap-5 mt-5">
-              <div className="p-2 cursor-pointer bg-secondary-400">
-                <MdOutlineKeyboardArrowLeft size={20} />
-              </div>
-              <div className="p-2 cursor-pointer bg-secondary-400">
-                <MdOutlineKeyboardArrowRight size={20} />
-              </div>
-            </div> */}
           </div>
         </div>
       </Container>

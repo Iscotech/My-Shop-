@@ -3,9 +3,10 @@ interface BtnProp {
   children: React.ReactNode;
   type: string;
   size: string;
+  handleClickChange?: () => void;
 }
 
-const Button = ({ children, size, type }: BtnProp) => {
+const Button = ({ children, size, type, handleClickChange }: BtnProp) => {
   return (
     <button
       className={` text-white rounded-lg cursor-pointer duration-300 transition-all
@@ -14,6 +15,7 @@ const Button = ({ children, size, type }: BtnProp) => {
       ${type === "primary" ? "bg-primary-500  hover:bg-primary-500/80" : ""}
       ${type === "neutral" ? "bg-black  hover:bg-black/80" : ""}
     `}
+      onClick={handleClickChange}
     >
       {children}
     </button>
